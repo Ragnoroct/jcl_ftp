@@ -7,6 +7,9 @@ This simple script uses unix's ftp program to submit files to marist's server, s
 #About Me
 My name is Will Bender, but most people call me Willy. I created this tool while taking CSCI 360 at NIU to make submitting JES jobs easier and faster.
 
+#Compatability
+This script works on linux and mac. Try JESftp for windows.
+
 #Alternatives
 [JESftp](https://gitlab.com/niumainframe/JESftp) A python script to automate job submitting  
 [MVS Tool](https://github.com/john-charles/MVSTool) Another student implementation in Java.  
