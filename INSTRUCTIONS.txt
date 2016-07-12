@@ -1,0 +1,44 @@
+/************************************************************* 
+     
+     Instructions to install and use jcl_ftp
+     By Will Bender <willypbender83@gmail.com>
+     
+     Tested on Linux and Mac
+*************************************************************/
+
+//Install command
+*************************************************************
+//Make sure you are in the jcl_ftp directory
+//Run
+./install.sh
+//That's it, you are ready to go.
+//To run program type
+jclftp
+*************************************************************
+
+//Using .netrc
+*************************************************************
+//If you want to automate the login you can use .netrc
+cd ~
+nano .netrc
+//Add these words replacing youruser and yourpasswd 
+//with your information
+machine zos.kctr.marist.edu
+	   login youruser
+	   password yourpasswd
+//If this is the first time making the .netrc file
+//make sure the permissions are for user only
+//NOTE: if permissions are not correct, program will not work
+cd ~
+chmod 600 .netrc
+*************************************************************
+
+//Other notes
+*************************************************************
+//This is a very easy to use program.
+//It is written in bash scripting language. Feel free to 
+//edit it to your own fancy. You can even email me your 
+//changes if you'd like.
+//I might improve it a bit and update it on github
+*************************************************************
+                                                       
