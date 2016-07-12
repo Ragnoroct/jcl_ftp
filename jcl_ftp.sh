@@ -204,7 +204,6 @@ function submitjob {
      #Submit job
      read jobid < <(putftp $1 | read_output) #Submit file and get job-id
      echo -e "\n\n" >> $LOGNAME
-     export -f PROGRESS=".33"
 
      kill $pid 2&>/dev/null
      wait $pid 2>/dev/null
@@ -222,6 +221,8 @@ function submitjob {
      done
      if [ $n -eq 5 ]; then
           ERROR="UNKNOWN ERROR: Job could not be fetched"
+          kill $pid 2&>/dev/null
+          wait $pid 2>/dev/null
           return       #End function
      fi
 
@@ -240,6 +241,8 @@ function submitjob {
           if [ -f $file ]; then break; fi;   #Break if file is found
           if [ "$SECONDS" -gt "$stop" ]; then
                ERROR="UNKNOWN ERROR: Job output could not be found."
+               kill $pid 2&>/dev/null
+               wait $pid 2>/dev/null
                return       #End function
           fi
           sleep .1
