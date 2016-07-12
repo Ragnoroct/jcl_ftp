@@ -33,8 +33,13 @@ if [ ! -d "$HOME/bin" ] ; then
      mkdir "$HOME/bin"
 fi
 
+#Make jcl_ftp.sh executable
+echo "Making jcl_ftp.sh executable"
+sleep .5
+chmod +x jcl_ftp.sh
+
 #Create executable
-echo "Installing executable in home bin."
+echo "Installing command in home bin."
 sleep .5
 echo "$script" > "$HOME/bin/$name"      #Create script, overwriting previous files with the same name
 chmod u+x "$HOME/bin/$name"             #Give executable perm. to user

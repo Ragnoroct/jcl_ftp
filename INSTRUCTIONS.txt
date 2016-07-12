@@ -4,13 +4,16 @@
      By Will Bender <willypbender83@gmail.com>
      
      Tested on Linux and Mac
+     
 *************************************************************/
 
 //Install command
 *************************************************************
 //Make sure you are in the jcl_ftp directory
 //Run
-./install.sh
+bash install.sh
+//NOTE: ./install.sh will not work because it will most
+//most likely not be executable
 //That's it, you are ready to go.
 //To run program type
 jclftp
@@ -40,5 +43,14 @@ chmod 600 .netrc
 //edit it to your own fancy. You can even email me your 
 //changes if you'd like.
 //I might improve it a bit and update it on github
+*************************************************************
+
+//Windows users
+*************************************************************
+//It is possible to run this script on windows using cygwin
+//but I have not tested it out.
+//Another tool that you can use is
+//https://gitlab.com/niumainframe/JESftp
+//"It will work on Linux, Windows, and probably mac"
 *************************************************************
                                                        

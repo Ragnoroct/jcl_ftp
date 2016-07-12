@@ -18,7 +18,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 LOGNAME="$DIR/log.txt"
 echo > "$LOGNAME"
 
-configfile="${DIR}/config"
+configfile="${DIR}/config.txt"
 configfile_secured="${DIR}/tmp/cool.cfg"
 
 # check if the config file contains something we don't want
