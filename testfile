@@ -1,0 +1,159 @@
+//KC03HA3W JOB ,'Willy Bender',MSGCLASS=H
+//STEP1 EXEC PGM=ASSIST
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR
+//SYSPRINT DD SYSOUT=*
+//SYSIN DD *
+********************************************
+* 
+*    Program: Assignment 3
+*    By:      Willy Bender
+*    z-id:    z1786922
+*
+*   1. Used by XDECI
+* 2-4. Arithmatic 
+*   5. Misc.
+*   6. Sale counter
+*   7. Free shipping counter
+*  15. Used by MAIN
+*   
+*
+********************************************
+MAIN      CSECT
+          USING MAIN,15
+*Initialize counters
+          SR    6,6
+          SR    7,7
+*Print identification lines
+          XPRNT LINETOP1,81
+          XPRNT LINETOP2,91
+LOOP      DS    0H
+*Read values from file
+          XREAD BUFFER,80            Read each line
+          BC    B'0100',LOOPEND      Checks for end of file
+          XDECI 5,BUFFER             Get product id
+          XDECO 5,PROID
+          XDECI 5,0(,1)              Get number ordered
+          XDECO 5,NUMORD
+          ST    5,ORDERS
+          XDECI 5,0(,1)              Get price of each
+          XDECO 5,PRIEACH
+          ST    5,PRICE
+          XDECI 5,0(,1)              Get discount
+          XDECO 5,DISC
+          ST    5,DISCOUNT
+          XDECI 5,0(,1)              Get order id
+          XDECO 5,ORDID
+*Get Shipping cost
+          L     3,PRICE              3: Load price of each
+          M     2,ORDERS             3: price of each * number ordered
+          C     3,=F'10000'
+          BC    B'0100',THEN         If less than 10,000
+ELSE      SR    5,5           
+          XDECO 5,SHIP             Shipping is free
+          ST    5,SHIPPING
+          A     7,=F'1'              Increment free shipping counter
+          B     DONE
+THEN      L     5,=F'600'          Shipping is 600
+          XDECO 5,SHIP
+          ST    5,SHIPPING
+DONE      DS    0H
+*Increment sale counter
+          A     6,=F'1'
+*Get Total cost
+          A     3,SHIPPING    3: Add shipping to price to get total
+          S     3,DISCOUNT    3: Subtract discount from total
+          XDECO 3,TOTAL       Store values
+*Add to sum of all sales
+          L     5,SUM         Load sum
+          AR    5,3           Add to it
+          ST    5,SUM         Store it
+*Print output line
+          XPRNT LINEOUT1,85   Print output line loop
+          B     LOOP          Loop again
+LOOPEND   DS    0H            End of loop
+*Store counters
+          ST    6,SALES       Store total sales counter
+          ST    7,SALESFS     Store free shipping counter
+*Find average sale
+          L     3,SUM         3: Contains sum of all sales
+          M     2,=F'1'       2-3: 64-bit int of sum
+          D     2,SALES       sum / num sales
+          ST    3,AVG         Store quotient in AVG
+          LR    3,2           load remainder into register 3
+          M     2,=F'2'       2 * remainder
+          C     3,SALES       Compare by divisor
+BEGINIF   BC    B'0100',ENDIF Check if result is less than divisor
+          L     5,AVG         Add one to avg if it is >=
+          A     5,=F'1'       Round up average by 1
+          ST    5,AVG         Store new average
+ENDIF     DS    0H            
+*Give values to summary lines
+          L     5,SALES            Output the total num of sales
+          XDECO 5,NUMSALES
+          L     5,SALESFS          Output the total num of free ship
+          XDECO 5,NUMFSHIP
+          L     5,SUM              Output the sum total made in sales
+          XDECO 5,SUMALL
+          L     5,AVG
+          XDECO 5,AVGSALE
+*Print summary lines
+          XPRNT LINEOUT2,37
+          XPRNT LINEOUT3,37
+          XPRNT LINEOUT4,37
+          XPRNT LINEOUT5,37
+*End of program
+          BR    14
+          LTORG
+*Variables
+BUFFER    DS    80C      Used to read file
+SALES     DC    F'0'     Num of sales
+SALESFS   DC    F'0'     Num of sales free shipping
+ORDERS    DS    F        Number of orders in sale
+PRICE     DS    F        Price for each
+SHIPPING  DS    F        Shipping cost
+DISCOUNT  DS    F        Discount
+AVG       DS    F        Average sale
+SUM       DC    F'0'     Sum total of all sales
+*Line variables to print
+*Prints the title
+LINETOP1  DC    C'0'                81 bytes
+TITLE     DC    CL80' '  
+          ORG   TITLE+30             
+          DC    CL34'Will Bender, CSCI 360, Program 3'
+          ORG
+*Prints the output identification
+LINETOP2  DC    C'0'                91 bytes
+          DC    CL5'     '              
+          DC    CL12'ORDER ID'
+          DC    CL12'PRODUCT ID'
+          DC    CL12'PRICE EACH'
+          DC    CL15'NUMBER ORDERED'
+          DC    CL10'DISCOUNT'
+          DC    CL12'SHIPPING'
+          DC    CL12'TOTAL'
+*Prints the output for each input
+LINEOUT1  DC    C'0'                85 bytes
+ORDID     DS    12C
+PROID     DS    12C
+PRIEACH   DS    12C
+NUMORD    DS    12C
+DISC      DS    12C
+SHIP      DS    12C
+TOTAL     DS    12C
+*Prints the stats from the sales
+LINEOUT2  DC    C'-'               37 bytes
+          DC    CL24'TOTAL NUMBER OF SALES:'
+NUMSALES  DS    12C
+LINEOUT3  DC    C'0'               37 bytes
+          DC    CL24'NUMBER /W FREE SHIPPING:'
+NUMFSHIP  DS    12C
+LINEOUT4  DC    C'0'               37 bytes
+          DC    CL24'SUM OF ALL SALES:'
+SUMALL    DS    12C
+LINEOUT5  DC    C'0'               37 bytes
+          DC    CL24'AVERAGE SALE TOTAL:'
+AVGSALE   DS    12C                 
+          END   MAIN
+/*
+//FT05F001 DD DSN=KC02314.SUMMER16.CSCI360.HW3DATA,DISP=SHR
+//
